@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store/store";
+import { Navigate } from "react-router-dom";
 import { loginSuccess } from "../redux/slices/authSlice";
 
 interface AdminRouteProps {
@@ -12,7 +12,7 @@ interface AdminRouteProps {
 const AdminRoute: React.FC<AdminRouteProps> = ({ children, roles }) => {
   const dispatch = useDispatch();
   const auth = useSelector((state: RootState) => state.auth);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
@@ -21,21 +21,19 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children, roles }) => {
 
     if (token && username && role) {
       dispatch(loginSuccess({ token, username, role }));
-    } else {
-      dispatch(loginSuccess({ token: "", username: "", role: "" }));
     }
+    setLoading(false);
   }, [dispatch]);
 
-  // console.log("===== Admin Route =====");
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!auth.role || !roles.includes(auth.role)) {
-    if (auth.role && auth.role === "admin") {
-      return children;
-    } else {
-      navigate("/");
-      alert("admin only");
-    }
+    return <Navigate to="/" replace />;
   }
+
+  return children;
 };
 
 export default AdminRoute;

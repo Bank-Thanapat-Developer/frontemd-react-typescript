@@ -25,26 +25,22 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.username = action.payload.username;
       state.role = action.payload.role;
-      //   state.isAuthenticated = true;
-      console.log("===== State Login=====");
-      console.log(state.token);
-      console.log(state.username);
-      console.log(state.role);
-      //   console.log(state.isAuthenticated);
+      // console.log("===== State Login=====");
+      // console.log(state.token);
+      // console.log(state.username);
+      // console.log(state.role);
     },
     logout: (state) => {
       state.token = null;
       state.username = null;
       state.role = null;
-      //   state.isAuthenticated = false;
       localStorage.removeItem("jwtToken");
       localStorage.removeItem("username");
       localStorage.removeItem("role");
-      console.log("===== State Logout=====");
-      console.log(state.token);
-      console.log(state.username);
-      console.log(state.role);
-      //   console.log(state.isAuthenticated);
+      // console.log("===== State Logout=====");
+      // console.log(state.token);
+      // console.log(state.username);
+      // console.log(state.role);
     },
   },
 });

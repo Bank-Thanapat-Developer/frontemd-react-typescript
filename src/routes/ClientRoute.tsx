@@ -1,9 +1,7 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store/store";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
 import { loginSuccess } from "../redux/slices/authSlice";
 
 interface ClientRouteProps {
@@ -12,30 +10,30 @@ interface ClientRouteProps {
 }
 
 const ClientRoute: React.FC<ClientRouteProps> = ({ children, roles }) => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = useSelector((state: RootState) => state.auth);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
-    console.log("==== Client route ====");
 
     if (token && username && role) {
       dispatch(loginSuccess({ token, username, role }));
     }
-  }, [dispatch, navigate]);
-  const auth = useSelector((state: RootState) => state.auth);
+    setLoading(false); 
+  }, [dispatch]);
 
-  console.log("==== Client Route");
+  if (loading) {
+    return <div>Loading...</div>; 
+  }
 
   if (!auth.role || !roles.includes(auth.role)) {
-    if (auth.role && auth.role === "client") {
-      return children;
-    } else {
-      navigate("/");
-      alert("client only");
-    }
+    return <Navigate to="/" replace />;
   }
+
+  return children;
 };
 
 export default ClientRoute;
