@@ -1,74 +1,132 @@
+// src/components/Navbar.tsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store/store";
+import { logout } from "../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { token, role } = useSelector((state: RootState) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
-    <div className="flex justify-between md:px-10 sm:px-5 px-5 items-center gap-3 text-xl py-1 mb-3 bg-red-400 relative">
-      <Link to={"/login"}>
+    <div className="fixed top-0 left-0 w-full flex justify-between items-center px-6 py-4 bg-gray-800 text-white z-10">
+      <Link to="/" className="flex items-center gap-2">
         <img
           src="https://cdn-icons-png.freepik.com/256/9665/9665924.png?ga=GA1.1.1426660444.1718305629&semt=ais_hybrid"
-          className="md:h-14 sm:h-9 h-9 hover:opacity-80 cursor-pointer"
+          className="h-8"
           alt="Logo"
         />
+        <span className="font-bold">MyApp</span>
       </Link>
-      {/* Desktop Menu */}
-      <div className="md:block sm:hidden hidden">
-        <div className="flex gap-8 items-center">
-          <Link to={"/login"}>
-            <div className="hover:bg-red-200 hover:text-red-400 p-1 rounded-lg text-yellow-50">
+      <div className="hidden md:flex gap-6">
+        {token ? (
+          <>
+            {role === "client" && (
+              <Link
+                to="/clientDashboard"
+                className="py-2 w-full text-center hover:bg-pink-700"
+              >
+                Client Dashboard
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link
+                to="/adminDashboard"
+                className="py-2 w-full text-center hover:bg-pink-700"
+              >
+                Admin Dashboard
+              </Link>
+            )}
+            <button
+              onClick={handleLogout}
+              className="hover:text-gray-400 focus:outline-none"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="hover:text-gray-400">
               Login
-            </div>
-          </Link>
-          <Link to={"/register"}>
-            <div className="hover:bg-red-200 hover:text-red-400 p-1 rounded-lg text-yellow-50">
+            </Link>
+            <Link to="/register" className="hover:text-gray-400">
               Register
-            </div>
-          </Link>
-        </div>
+            </Link>
+          </>
+        )}
       </div>
-      {/* Title */}
-      <div className="flex md:hidden">
-        <p className="text-white font-bold">Go Echo & React Typescript</p>
-      </div>
-      {/* Hamburger Icon */}
-      <div className="md:hidden flex items-center">
-        <button
-          className="text-white focus:outline-none p-1 rounded-lg hover:bg-red-200 hover:text-red-400"
-          onClick={() => setShowMenu(!showMenu)}
+      <button
+        className="md:hidden flex items-center"
+        onClick={() => setShowMenu(!showMenu)}
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16m-7 6h7"
-            />
-          </svg>
-        </button>
-      </div>
-      {/* Mobile Menu */}
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16m-7 6h7"
+          />
+        </svg>
+      </button>
       {showMenu && (
-        <div className="absolute top-11 left-0 w-full bg-red-200 flex flex-col items-center md:hidden">
-          <Link
-            to={"/login"}
-            className="py-2 hover:bg-red-200 hover:text-red-400 w-full text-center bg-red-300"
-          >
-            Login
-          </Link>
-          <Link
-            to={"/register"}
-            className="py-2 hover:bg-red-200 hover:text-red-400 w-full text-center bg-red-300"
-          >
-            Register
-          </Link>
+        <div className="absolute top-16 left-0 w-full bg-gray-800 flex flex-col items-center md:hidden">
+          {token ? (
+            <>
+              {role === "client" && (
+                <Link
+                  to="/clientDashboard"
+                  className="py-2 w-full text-center hover:bg-gray-700"
+                >
+                  Client Dashboard
+                </Link>
+              )}
+              {role === "admin" && (
+                <Link
+                  to="/adminDashboard"
+                  className="py-2 w-full text-center hover:bg-gray-700"
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              <button
+                onClick={handleLogout}
+                className="py-2 w-full text-center hover:bg-gray-700"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="py-2 w-full text-center hover:bg-gray-700"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="py-2 w-full text-center hover:bg-gray-700"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>
