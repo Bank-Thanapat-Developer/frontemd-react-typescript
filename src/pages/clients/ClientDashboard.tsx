@@ -1,35 +1,20 @@
+// src/pages/clients/ClientDashboard.tsx
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store/store";
 
-const ClientDashboard = () => {
+const ClientDashboard: React.FC = () => {
+  const { username } = useSelector((state: RootState) => state.auth);
+
   return (
-    <div className="relative overflow-x-auto  h-auto mx-36 my-10  rounded-lg">
-      <h1 className="text-4xl font-bold text-center text-gray-900 mb-8">
-        Client
-      </h1>
-      <table className="h-auto w-4/5 mx-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-800 dark:text-gray-300">
-          <tr>
-            <th scope="col" className="px-4 py-2">
-              Id
-            </th>
-            <th scope="col" className="px-4 py-2">
-              Username
-            </th>
-            <th scope="col" className="px-4 py-2">
-              Role
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="bg-white dark:bg-gray-700 border-b dark:border-gray-600">
-            <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
-              1
-            </td>
-            <td className="px-4 py-3">Silver</td>
-            <td className="px-4 py-3">client</td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-4">Client Dashboard</h1>
+      <p className="text-lg mb-4">Welcome, {username}!</p>
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <p className="text-gray-800">
+          This is your private dashboard content as a client.
+        </p>
+      </div>
     </div>
   );
 };

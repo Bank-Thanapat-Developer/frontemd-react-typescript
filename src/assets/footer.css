@@ -1,0 +1,18 @@
+/* styles.css */
+.footer-bottom-corners::before,
+.footer-bottom-corners::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 2px; /* ปรับความหนาของเส้นขอบตามต้องการ */
+  background-color: #ffffff; /* ปรับสีของเส้นขอบตามต้องการ */
+}
+
+.footer-bottom-corners::before {
+  left: 0;
+}
+
+.footer-bottom-corners::after {
+  right: 0;
+}

@@ -1,26 +1,53 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { loginSuccess } from "../redux/slices/authSlice";
 
-const Login = () => {
+const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Username:", username);
-    console.log("Password:", password);
-    // Handle form submission logic here (e.g., sending data to backend)
+    try {
+      const response = await axios.post("http://localhost:8080/auth/login", {
+        username,
+        password,
+      });
+      // console.log(response.data.token);
+
+      const { token, role } = response.data.token;
+      localStorage.setItem("jwtToken", token);
+      localStorage.setItem("username", username);
+      localStorage.setItem("role", role);
+      dispatch(loginSuccess({ token, username, role }));
+      alert("Login successful");
+
+      if (role === "admin") {
+        navigate("/adminDashboard");
+      } else {
+        navigate("/clientDashboard");
+      }
+    } catch (error) {
+      alert("Login failed");
+      console.error(error);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-yellow-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:w-96">
-        <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-slate-200">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full sm:w-96">
+        <h2 className="text-2xl text-white font-bold text-center mb-6">
+          Login
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-white"
             >
               Username
             </label>
@@ -36,7 +63,7 @@ const Login = () => {
           <div className="mb-4">
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-white"
             >
               Password
             </label>
@@ -52,17 +79,17 @@ const Login = () => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-indigo-500 text-white px-4 py-2 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-900"
             >
               Login
             </button>
           </div>
         </form>
-        <p className="mt-4 text-sm text-center">
+        <p className="mt-4 text-sm text-center text-white">
           Don't have an account?{" "}
-          <Link to="/register" className="text-indigo-500 hover:underline">
+          <a href="/register" className="text-red-400 hover:underline">
             Register here
-          </Link>
+          </a>
         </p>
       </div>
     </div>
