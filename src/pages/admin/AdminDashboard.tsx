@@ -50,7 +50,7 @@ const AdminDashboard: React.FC = () => {
       );
       console.log(response.data);
       //{id: 1718467025202888700, username: 'admin', role: 'admin'}
-      setUpdateUserData(response.data)
+      setUpdateUserData(response.data);
       setLoading(false);
     } catch (error) {
       setError("Failed to fetch data");
