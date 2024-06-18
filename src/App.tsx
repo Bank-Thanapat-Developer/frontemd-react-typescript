@@ -22,13 +22,12 @@ const App = () => {
     if (token && username && role) {
       dispatch(loginSuccess({ token, username, role }));
     } else {
-      dispatch(loginSuccess({ token: "", username: "", role: "" })); // Clear state if no valid token
+      dispatch(loginSuccess({ token: "", username: "", role: "" })); 
     }
   }, [dispatch]);
 
   return (
     <div className="bg-gray-400 min-h-screen pt-16">
-      {/* Adjust padding-top to ensure content is not hidden by Navbar */}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

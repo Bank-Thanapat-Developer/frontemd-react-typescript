@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { loginSuccess } from "../redux/slices/authSlice";
+import Swal from "sweetalert2";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -17,22 +18,31 @@ const Login: React.FC = () => {
         username,
         password,
       });
-      // console.log(response.data.token);
-
       const { token, role } = response.data.token;
       localStorage.setItem("jwtToken", token);
       localStorage.setItem("username", username);
       localStorage.setItem("role", role);
       dispatch(loginSuccess({ token, username, role }));
-      alert("Login successful");
-
+      Swal.fire({
+        position: "top-end",
+        icon: "success",
+        title: "Login successful",
+        showConfirmButton: false,
+        timer: 1500
+      });
       if (role === "admin") {
         navigate("/adminDashboard");
       } else {
         navigate("/clientDashboard");
       }
     } catch (error) {
-      alert("Login failed");
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "username or password invalid",
+        showConfirmButton: false,
+        timer: 1500
+      });
       console.error(error);
     }
   };
